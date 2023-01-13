@@ -23,14 +23,16 @@ public class Interceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request,
-                           HttpServletResponse response, Object object, ModelAndView model)
-            throws Exception {
-        if (!request.getRequestURI().equals("/api/auth/signup")) {
-            log.info(request.getRequestURI());
-            UserAuditTable userAuditTable = new UserAuditTable();
-            userAuditTable.setUsername(getUserNameFromContext());
-            userAuditTable.setUri(request.getRequestURI());
-            userAuditRepository.save(userAuditTable);
+                           HttpServletResponse response, Object object, ModelAndView model) {
+        try {
+            if (!request.getRequestURI().equals("/api/auth/signup")) {
+                UserAuditTable userAuditTable = new UserAuditTable();
+                userAuditTable.setUsername(getUserNameFromContext());
+                userAuditTable.setUri(request.getRequestURI());
+                userAuditRepository.save(userAuditTable);
+            }
+        } catch (Exception e){
+            log.error(e.getMessage());
         }
     }
     private String getUserNameFromContext(){
