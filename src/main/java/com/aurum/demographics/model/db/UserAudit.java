@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Table(name = "user_audit_table")
 @Setter
 @Getter
-public class UserAuditTable {
+public class UserAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

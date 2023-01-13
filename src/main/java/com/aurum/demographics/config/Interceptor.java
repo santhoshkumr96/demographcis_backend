@@ -1,8 +1,7 @@
 package com.aurum.demographics.config;
 
-import com.aurum.demographics.model.db.UserAuditTable;
+import com.aurum.demographics.model.db.UserAudit;
 import com.aurum.demographics.repo.UserAuditRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,10 +25,10 @@ public class Interceptor implements HandlerInterceptor {
                            HttpServletResponse response, Object object, ModelAndView model) {
         try {
             if (!request.getRequestURI().equals("/api/auth/signup")) {
-                UserAuditTable userAuditTable = new UserAuditTable();
-                userAuditTable.setUsername(getUserNameFromContext());
-                userAuditTable.setUri(request.getRequestURI());
-                userAuditRepository.save(userAuditTable);
+                UserAudit userAudit = new UserAudit();
+                userAudit.setUsername(getUserNameFromContext());
+                userAudit.setUri(request.getRequestURI());
+                userAuditRepository.save(userAudit);
             }
         } catch (Exception e){
             log.error(e.getMessage());
