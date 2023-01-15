@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -32,6 +33,8 @@ public class FamilyDetails implements Serializable {
     private String livestockDetails;
     private String toiletFacilityAtHome;
     private int createdBy;
+    private String isDeleted;
+    private String deletedBy;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "statusOfHouse", insertable = false, updatable = false)
