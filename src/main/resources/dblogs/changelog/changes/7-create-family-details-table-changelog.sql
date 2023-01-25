@@ -15,9 +15,10 @@ CREATE TABLE `family_details` (
   `motor_vechicles` varchar(1000) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'N/A',
   `livestock_details` varchar(1000) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'N/A',
   `toilet_facility_at_home` varchar(5) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'N/A',
+  `deleted_by` int DEFAULT NULL,
+  `is_deleted` varchar(5) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'N',
   `created_by` int DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `family_id` (`family_id`)
-);
+  PRIMARY KEY (`id`)
+) ;

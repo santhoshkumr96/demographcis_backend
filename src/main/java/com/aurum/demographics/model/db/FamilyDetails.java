@@ -30,11 +30,25 @@ public class FamilyDetails implements Serializable {
     private String wetLandInAcres;
     private String dryLandInAcres;
     private String motorVechicles;
+    private int oneWheeler;
+    private int twoWheeler;
+    private int threeWheeler;
+    private int fourWheeler;
+    private int noOtherVechicles;
+    private String otherVechiclesDetails;
     private String livestockDetails;
+    private int hen;
+    private int cow;
+    private int pig;
+    private int buffalo;
+    private int goat;
+    private int noOtherLivestock;
+    private String otherLivestockDetails;
     private String toiletFacilityAtHome;
-    private int createdBy;
+    private Integer createdBy;
+    private Integer updatedBy;
+    private Integer deletedBy;
     private String isDeleted;
-    private String deletedBy;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "statusOfHouse", insertable = false, updatable = false)
