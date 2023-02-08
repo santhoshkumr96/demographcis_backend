@@ -50,8 +50,59 @@ public class MemberDetail implements Serializable {
     private String bp;
     private String osteoporosis;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    private String isOsteoporosisScan;
+    private Timestamp osteoporosisScanOne;
+    private Timestamp osteoporosisScanTwo;
+    private Timestamp deceasedDate;
+    private String isDeceased;
+
+    private String breastCancer;
+    private String uterusCancer;
+    private String oralCancer;
+    private String obesity;
+    private String heartDiseases;
+    private String lungRelatedDiseases;
+    private String asthma;
+    private String jointPain;
+    private String otherDiseases;
+
+
+    private String community;
+    private String caste;
+
+    private int relationship;
+    private int maritalStatus;
+    private int bloodGroup;
+    private int educationQualification;
+    private int annualIncome;
+
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "gender", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     Gender genderDetails;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "relationship", insertable = false, updatable = false)
+    @Fetch(FetchMode.JOIN)
+    RelationShip relationshipDetails;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "maritalStatus", insertable = false, updatable = false)
+    @Fetch(FetchMode.JOIN)
+    MaritalStatus maritalStatusDetails;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bloodGroup", insertable = false, updatable = false)
+    @Fetch(FetchMode.JOIN)
+    BloodGroup bloodGroupDetails;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "educationQualification", insertable = false, updatable = false)
+    @Fetch(FetchMode.JOIN)
+    Education educationQualificationDetails;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "annualIncome", insertable = false, updatable = false)
+    @Fetch(FetchMode.JOIN)
+    AnnuaIncome annualIncomeDetails;
 }

@@ -10,6 +10,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -71,8 +72,8 @@ public class FamilyDetails implements Serializable {
     @Fetch(FetchMode.JOIN)
     DemographicDetail demographicDetail;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "familyIdRef", referencedColumnName="familyId", insertable = false, updatable = false)
-    @Fetch(FetchMode.SELECT)
+    @Fetch(FetchMode.JOIN)
     List<MemberDetail> memberDetail;
 }

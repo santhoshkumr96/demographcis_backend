@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.AnnotatedArrayType;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -42,6 +43,24 @@ public class DemographicController {
     @Autowired
     MemberDetailsRepo memberDetailsRepo;
 
+    @Autowired
+    AnnualIncomeRepo annualIncomeRepo;
+
+    @Autowired
+    BloodGroupRepo bloodGroupRepo;
+
+    @Autowired
+    EducationQualificationRepo educationQualificationRepo;
+
+    @Autowired
+    MaritalStatusRepo maritalStatusRepo;
+
+    @Autowired
+    RelationShipRepo relationShipRepo;
+
+    @Autowired
+    DemograhicDetailAuditRepository demograhicDetailAuditRepository;
+
     @GetMapping("/getAreaDetails")
 //    @PreAuthorize("hasRole('USER')")
     public Object getAreaDetails(){
@@ -52,6 +71,42 @@ public class DemographicController {
 //    @PreAuthorize("hasRole('USER')")
     public Object getTypeOFHouse(){
         return typeOfHouseRepo.findAll();
+    }
+
+    @GetMapping("/getGender")
+//    @PreAuthorize("hasRole('USER')")
+    public Object getGender(){
+        return genderRepo.findAll();
+    }
+
+    @GetMapping("/getRelationship")
+//    @PreAuthorize("hasRole('USER')")
+    public Object getRelationship(){
+        return relationShipRepo.findAll();
+    }
+
+    @GetMapping("/getEducationQualification")
+//    @PreAuthorize("hasRole('USER')")
+    public Object getEducationQualification(){
+        return educationQualificationRepo.findAll();
+    }
+
+    @GetMapping("/getBloodGroup")
+//    @PreAuthorize("hasRole('USER')")
+    public Object getBloodGroup(){
+        return bloodGroupRepo.findAll();
+    }
+
+    @GetMapping("/getMaritalStatus")
+//    @PreAuthorize("hasRole('USER')")
+    public Object getMaritalStatus(){
+        return maritalStatusRepo.findAll();
+    }
+
+    @GetMapping("/getAnnualIncome")
+//    @PreAuthorize("hasRole('USER')")
+    public Object getAnnualIncome(){
+        return annualIncomeRepo.findAll();
     }
 
     @GetMapping("/getStatusOfHouseDetails")
@@ -101,6 +156,22 @@ public class DemographicController {
             familyDetails.setTypeOfHouse((int) (long) type.get(0).getId());
         }
 
+        if (familyDetails.getAreaDetails() == 0){
+            List<DemographicDetail> areas = (List<DemographicDetail>) demograhicDetailRepository.findAll();
+            familyDetails.setAreaDetails((int)(long) areas.get(0).getId());
+        }
+
+        if(!Objects.isNull(familyDetails.getId())){
+           FamilyDetails oldDetails = familyDetailRepository.findById(familyDetails.getId()).get();
+           if(oldDetails.getAreaDetails() != familyDetails.getAreaDetails()){
+               DemographicDetailAudit demographicDetailAudit = new DemographicDetailAudit();
+               demographicDetailAudit.setCreated_by(familyDetails.getUpdatedBy());
+               demographicDetailAudit.setAreaPreviousId(oldDetails.getAreaDetails());
+               demographicDetailAudit.setFamilyId(familyDetails.getFamilyId());
+               demograhicDetailAuditRepository.save(demographicDetailAudit);
+               log.info("area is changed");
+           }
+        }
         Long generatedId = familyDetailRepository.save(familyDetails).getId();
         return generatedId;
     }
@@ -130,7 +201,32 @@ public class DemographicController {
             memberDetail.setGender((int)(long)gender.get(0).getId());
         }
 
-        return memberDetailsRepo.save(memberDetail);
+        if (memberDetail.getRelationship() == 0 ){
+            List<RelationShip> relationShips = (List<RelationShip>) relationShipRepo.findAll();
+            memberDetail.setRelationship((int)(long)relationShips.get(0).getId());
+        }
+
+        if (memberDetail.getBloodGroup() == 0 ){
+            List<BloodGroup> bloodGroup = (List<BloodGroup>) bloodGroupRepo.findAll();
+            memberDetail.setBloodGroup((int)(long)bloodGroup.get(0).getId());
+        }
+
+        if (memberDetail.getEducationQualification() == 0 ){
+            List<Education> educations = (List<Education>) educationQualificationRepo.findAll();
+            memberDetail.setEducationQualification((int)(long)educations.get(0).getId());
+        }
+
+        if (memberDetail.getAnnualIncome() == 0 ){
+            List<AnnuaIncome> annualIncomes = (List<AnnuaIncome>) annualIncomeRepo.findAll();
+            memberDetail.setAnnualIncome((int)(long)annualIncomes.get(0).getId());
+        }
+
+        if (memberDetail.getMaritalStatus() == 0 ){
+            List<MaritalStatus> maritalStatuses = (List<MaritalStatus>) maritalStatusRepo.findAll();
+            memberDetail.setMaritalStatus((int)(long)maritalStatuses.get(0).getId());
+        }
+
+        return memberDetailsRepo.findById(memberDetailsRepo.save(memberDetail).getId()).get();
     }
 
     @PostMapping("/deleteMember")
