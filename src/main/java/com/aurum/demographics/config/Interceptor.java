@@ -31,7 +31,7 @@ public class Interceptor implements HandlerInterceptor {
                 userAuditRepository.save(userAudit);
             }
         } catch (Exception e){
-            log.error(e.getMessage());
+//            log.error(e.getMessage());
         }
     }
     private String getUserNameFromContext(){

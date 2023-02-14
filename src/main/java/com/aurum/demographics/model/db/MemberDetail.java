@@ -31,7 +31,7 @@ public class MemberDetail implements Serializable {
     private String email;
     private String physicallyChallenged;
     private String physicallyChallengedDetails;
-    private String occupation;
+    private int occupation;
     private String smartphone;
     private String govtInsurance;
     private String privateInsurance;
@@ -58,6 +58,7 @@ public class MemberDetail implements Serializable {
 
     private String breastCancer;
     private String uterusCancer;
+    private Timestamp uterusCancerScan;
     private String oralCancer;
     private String obesity;
     private String heartDiseases;
@@ -67,8 +68,10 @@ public class MemberDetail implements Serializable {
     private String otherDiseases;
 
 
-    private String community;
-    private String caste;
+    private int community;
+
+    private String imageLocation;
+
 
     private int relationship;
     private int maritalStatus;
@@ -76,7 +79,12 @@ public class MemberDetail implements Serializable {
     private int educationQualification;
     private int annualIncome;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    private String annual_income_string;
+    private String tmh_id;
+    private String patient_id;
+
+
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gender", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     Gender genderDetails;
@@ -105,4 +113,14 @@ public class MemberDetail implements Serializable {
     @JoinColumn(name = "annualIncome", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     AnnuaIncome annualIncomeDetails;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "community", insertable = false, updatable = false)
+    @Fetch(FetchMode.JOIN)
+    CommunityDetail communityDetail;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "occupation", insertable = false, updatable = false)
+    @Fetch(FetchMode.JOIN)
+    Occupation occupationDetail;
 }
