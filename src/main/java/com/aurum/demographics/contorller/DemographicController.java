@@ -127,6 +127,12 @@ public class DemographicController {
         return demograhicDetailRepository.findAll();
     }
 
+    @GetMapping("/getHandiCapDetails")
+//    @PreAuthorize("hasRole('USER')")
+    public Object getHandiCapDetails(){
+        return handiCapeTypeRepo.findAll();
+    }
+
     @GetMapping("/getTypeOfHouseDetails")
 //    @PreAuthorize("hasRole('USER')")
     public Object getTypeOFHouse(){
