@@ -87,6 +87,9 @@ public class DemographicController {
     @Autowired
     FamilyDetailAuditRepository familyDetailAuditRepository;
 
+    @Autowired
+    HandiCapeTypeRepo handiCapeTypeRepo;
+
 
     @Autowired
     MemberDetailsAuditRepo memberDetailsAuditRepo;
@@ -394,6 +397,11 @@ public class DemographicController {
         temp.setType("n/a");
         genders.add(temp);
 
+        List<HandicapType> handicapTypes = new ArrayList<>();
+        HandicapType handicapType = new HandicapType();
+        handicapType.setType("n/a");
+        handicapTypes.add(handicapType);
+
         List<RelationShip> relationShips = new ArrayList<>();
         RelationShip temp1 = new RelationShip();
         temp1.setType("n/a");
@@ -458,6 +466,7 @@ public class DemographicController {
         Set<String> typeOfHouse = new HashSet<>();
         Set<String> statusOfHouse = new HashSet<>();
         Set<String> areaDetails = new HashSet<>();
+        Set<String> handiCapeTypeset = new HashSet<>();
 
         int i = 0 ;
         for (Sheet sheet : workbook){
@@ -471,6 +480,7 @@ public class DemographicController {
 //                    memberDetails.add(memberDetail);
 
 
+                    handiCapeTypeset.add(r.getCell(99).getStringCellValue());
                     gender.add(r.getCell(18).getStringCellValue());
                     relationShip.add(r.getCell(19).getStringCellValue());
                     maritalStatus.add(r.getCell(24).getStringCellValue());
@@ -602,7 +612,18 @@ public class DemographicController {
             }
         }
 
+        for (String g: handiCapeTypeset){
+            if(!g.toLowerCase(Locale.ROOT).isEmpty()){
+                HandicapType gen = new HandicapType();
+                gen.setType(g.toLowerCase(Locale.ROOT));
+                handicapTypes.add(gen);
+            }
+        }
 
+
+
+        handiCapeTypeRepo.deleteAll();
+        handiCapeTypeRepo.saveAll(handicapTypes);
         demograhicDetailRepository.deleteAll();
         demograhicDetailRepository.saveAll(demographicDetails);
         genderRepo.deleteAll();

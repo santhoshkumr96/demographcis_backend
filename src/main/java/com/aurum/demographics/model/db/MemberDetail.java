@@ -81,6 +81,7 @@ public class MemberDetail implements Serializable {
     private int bloodGroup;
     private int educationQualification;
     private int annualIncome;
+    private int handicapType;
 
     private String annualIncomeString;
     private String tmh_id;
@@ -126,4 +127,9 @@ public class MemberDetail implements Serializable {
     @JoinColumn(name = "occupation", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     Occupation occupationDetail;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "handicapType", insertable = false, updatable = false)
+    @Fetch(FetchMode.JOIN)
+    HandicapType handicapTypeDetail;
 }
