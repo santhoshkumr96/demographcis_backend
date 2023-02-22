@@ -927,7 +927,7 @@ public class DemographicController {
 
     public Date dateGet(String val) throws JsonProcessingException, ParseException {
         String[] datestrings = val.split("-");
-        System.out.println(new ObjectMapper().writeValueAsString(datestrings));
+//        System.out.println(new ObjectMapper().writeValueAsString(datestrings));
         Date date = new GregorianCalendar(
                 Integer.parseInt(datestrings[2]),  Integer.parseInt(datestrings[0]) - 1, Integer.parseInt(datestrings[1])).getTime();
 
