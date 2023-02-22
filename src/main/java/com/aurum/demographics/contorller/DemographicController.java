@@ -11,6 +11,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -82,6 +83,13 @@ public class DemographicController {
 
     @Autowired
     MemberDetailForFamIdUpdateRepo memberDetailForFamIdUpdateRepo;
+
+    @Autowired
+    FamilyDetailAuditRepository familyDetailAuditRepository;
+
+
+    @Autowired
+    MemberDetailsAuditRepo memberDetailsAuditRepo;
 
     public static String UPLOAD_DIRECTORY = "/Users/santhoshkumar/Desktop/testdemoimages";
 
@@ -207,6 +215,13 @@ public class DemographicController {
     public Long getFamilyDetail(@RequestBody FamilyDetails familyDetails) throws Exception {
         familyDetails.setIsDeleted("N");
 
+        if(!familyDetails.getFamilyId().isEmpty()){
+            FamilyDetails familyDetailsAudit = familyDetailRepository.findById(familyDetails.getId()).get();
+            FamilyDetailsAudit familyDetailsAudit1 = new FamilyDetailsAudit();
+            BeanUtils.copyProperties(familyDetailsAudit1,familyDetailsAudit);
+            familyDetailAuditRepository.save(familyDetailsAudit1);
+        }
+
         if (familyDetails.getStatusOfHouse() == 0){
              List<StatusOfHouse> houses = (List<StatusOfHouse>) statusOfHouseRepo.findAll();
              familyDetails.setStatusOfHouse((int) (long) houses.get(0).getId());
@@ -294,6 +309,14 @@ public class DemographicController {
     public MemberDetail saveMemberDetail(@RequestBody MemberDetail memberDetail) throws Exception {
 
         memberDetail.setIsDeleted("N");
+
+        if(memberDetail.getId() == 0){
+            MemberDetail memberDetailAudit = memberDetailsRepo.findById(memberDetail.getId()).get();
+            MemberDetailAudit memberDetailAudit1 = new MemberDetailAudit();
+            BeanUtils.copyProperties(memberDetailAudit1,memberDetailAudit);
+            memberDetailsAuditRepo.save(memberDetailAudit1);
+        }
+
         if (memberDetail.getGender() == 0 ){
             List<Gender> gender = (List<Gender>) genderRepo.findAll();
             memberDetail.setGender((int)(long)gender.get(0).getId());

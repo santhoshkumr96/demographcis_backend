@@ -1,8 +1,9 @@
 --liquibase formatted sql
---changeset santhosh:11
+--changeset santhosh:22
 
-CREATE TABLE `member_details` (
-  `id` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `member_details_audit` (
+`refId` int NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL,
   `family_id_ref` varchar(15) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `member_name` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `gender` int NOT NULL,
@@ -60,5 +61,5 @@ CREATE TABLE `member_details` (
   `is_deleted` varchar(5) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT '',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`refId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=136475 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
