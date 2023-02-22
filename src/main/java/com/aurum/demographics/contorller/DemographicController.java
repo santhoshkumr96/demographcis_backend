@@ -796,6 +796,12 @@ public class DemographicController {
         List<Education> educations = (List<Education>) educationQualificationRepo.findAll();
         List<CommunityDetail> communityDetails = (List<CommunityDetail>) communityDetailRepository.findAll();
         List<Occupation> occupations = (List<Occupation>) occupationRepo.findAll();
+        List<HandicapType> handicapTypes = (List<HandicapType>) handiCapeTypeRepo.findAll();
+
+        Map<String, Integer> handicapTypesMap = new HashMap<>();
+        for(HandicapType data: handicapTypes){
+            handicapTypesMap.put(data.getType(),((int)(long) data.getId()));
+        }
 
         Map<String, Integer> genMap = new HashMap<>();
         for(Gender data: genders){
@@ -860,7 +866,7 @@ public class DemographicController {
                         memberDetail.setBreastCancer(yesOrNo(r.getCell(107).getStringCellValue()));
                         memberDetail.setUterusCancer(yesOrNo(r.getCell(108).getStringCellValue()));
                         memberDetail.setPhysicallyChallenged(yesOrNo(r.getCell(98).getStringCellValue()));
-
+                        memberDetail.setHandicapType(handicapTypesMap.get(mapValueCheck(r.getCell(99).getStringCellValue())));
 
                         memberDetail.setCommunity(communityDetailsMap.get(r.getCell(13).getStringCellValue().toLowerCase(Locale.ROOT)+r.getCell(14).getStringCellValue().toLowerCase(Locale.ROOT)));
                         memberDetail.setMemberName(r.getCell(17).getStringCellValue());
