@@ -735,14 +735,14 @@ public class DemographicController {
                             familyDetail.setCreatedBy(1);
                             familyDetail.setAreaDetails(
                                     stringDemographicDetailMap.get(
-                                            r.getCell(1).getStringCellValue()+
-                                                    r.getCell(2).getStringCellValue()+
-                                                    r.getCell(3).getStringCellValue()+
-                                                    r.getCell(4).getStringCellValue()+
-                                                    r.getCell(5).getStringCellValue()+
-                                                    r.getCell(6).getStringCellValue()+
-                                                    r.getCell(7).getStringCellValue()+
-                                                    r.getCell(8).getStringCellValue()
+                                            r.getCell(1).getStringCellValue().toLowerCase(Locale.ROOT)+
+                                                    r.getCell(2).getStringCellValue().toLowerCase(Locale.ROOT)+
+                                                    r.getCell(3).getStringCellValue().toLowerCase(Locale.ROOT)+
+                                                    r.getCell(4).getStringCellValue().toLowerCase(Locale.ROOT)+
+                                                    r.getCell(5).getStringCellValue().toLowerCase(Locale.ROOT)+
+                                                    r.getCell(6).getStringCellValue().toLowerCase(Locale.ROOT)+
+                                                    r.getCell(7).getStringCellValue().toLowerCase(Locale.ROOT)+
+                                                    r.getCell(8).getStringCellValue().toLowerCase(Locale.ROOT)
 
                                     )
                             );
