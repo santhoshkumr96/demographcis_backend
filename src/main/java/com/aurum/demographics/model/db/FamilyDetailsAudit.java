@@ -49,29 +49,4 @@ public class FamilyDetailsAudit implements Serializable {
     private Integer deletedBy;
     private String isDeleted;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "statusOfHouse", insertable = false, updatable = false)
-    @Fetch(FetchMode.JOIN)
-    StatusOfHouse statusOfHouseDetails;
-
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "typeOfHouse", insertable = false, updatable = false)
-    @Fetch(FetchMode.JOIN)
-    TypeOfHouse typeOfHouseDetails;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "createdBy", insertable = false, updatable = false)
-    @Fetch(FetchMode.JOIN)
-    User userDetails;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "areaDetails", insertable = false, updatable = false)
-    @Fetch(FetchMode.JOIN)
-    DemographicDetail demographicDetail;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "familyIdRef", referencedColumnName="familyId", insertable = false, updatable = false)
-    @Fetch(FetchMode.JOIN)
-    List<MemberDetail> memberDetail;
 }

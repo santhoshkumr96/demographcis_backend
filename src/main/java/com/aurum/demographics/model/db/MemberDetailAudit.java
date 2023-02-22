@@ -85,45 +85,4 @@ public class MemberDetailAudit implements Serializable {
     private String annualIncomeString;
     private String tmh_id;
     private String patient_id;
-
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "gender", insertable = false, updatable = false)
-    @Fetch(FetchMode.JOIN)
-    Gender genderDetails;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "relationship", insertable = false, updatable = false)
-    @Fetch(FetchMode.JOIN)
-    RelationShip relationshipDetails;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "maritalStatus", insertable = false, updatable = false)
-    @Fetch(FetchMode.JOIN)
-    MaritalStatus maritalStatusDetails;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "bloodGroup", insertable = false, updatable = false)
-    @Fetch(FetchMode.JOIN)
-    BloodGroup bloodGroupDetails;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "educationQualification", insertable = false, updatable = false)
-    @Fetch(FetchMode.JOIN)
-    Education educationQualificationDetails;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "annualIncome", insertable = false, updatable = false)
-    @Fetch(FetchMode.JOIN)
-    AnnuaIncome annualIncomeDetails;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "community", insertable = false, updatable = false)
-    @Fetch(FetchMode.JOIN)
-    CommunityDetail communityDetail;
-
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "occupation", insertable = false, updatable = false)
-    @Fetch(FetchMode.JOIN)
-    Occupation occupationDetail;
 }

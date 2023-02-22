@@ -218,8 +218,10 @@ public class DemographicController {
         if(!familyDetails.getFamilyId().isEmpty()){
             FamilyDetails familyDetailsAudit = familyDetailRepository.findById(familyDetails.getId()).get();
             FamilyDetailsAudit familyDetailsAudit1 = new FamilyDetailsAudit();
-            BeanUtils.copyProperties(familyDetailsAudit1,familyDetailsAudit);
+            BeanUtils.copyProperties(familyDetailsAudit,familyDetailsAudit1);
+//            System.out.println(new ObjectMapper().writeValueAsString(familyDetailsAudit1));
             familyDetailAuditRepository.save(familyDetailsAudit1);
+
         }
 
         if (familyDetails.getStatusOfHouse() == 0){
@@ -310,10 +312,10 @@ public class DemographicController {
 
         memberDetail.setIsDeleted("N");
 
-        if(memberDetail.getId() == 0){
+        if( !Objects.isNull(memberDetail.getId()) && memberDetail.getId() != 0){
             MemberDetail memberDetailAudit = memberDetailsRepo.findById(memberDetail.getId()).get();
             MemberDetailAudit memberDetailAudit1 = new MemberDetailAudit();
-            BeanUtils.copyProperties(memberDetailAudit1,memberDetailAudit);
+            BeanUtils.copyProperties(memberDetailAudit,memberDetailAudit1);
             memberDetailsAuditRepo.save(memberDetailAudit1);
         }
 
