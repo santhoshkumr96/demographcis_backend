@@ -819,6 +819,23 @@ public class DemographicController {
                         memberDetail.setMobileNumber(r.getCell(11).getStringCellValue());
 
                         memberDetail.setSmartphone(yesOrNo(r.getCell(12).getStringCellValue()));
+                        memberDetail.setGovtInsurance(yesOrNo(r.getCell(40).getStringCellValue()));
+                        memberDetail.setPrivateInsurance(yesOrNo(r.getCell(41).getStringCellValue()));
+                        memberDetail.setOldAgePension(yesOrNo(r.getCell(42).getStringCellValue()));
+                        memberDetail.setWidowedPension(yesOrNo(r.getCell(43).getStringCellValue()));
+                        memberDetail.setRetiredPerson(yesOrNo(r.getCell(44).getStringCellValue()));
+                        memberDetail.setSmoking(yesOrNo(r.getCell(47).getStringCellValue()));
+                        memberDetail.setDrinking(yesOrNo(r.getCell(48).getStringCellValue()));
+                        memberDetail.setTobacco(yesOrNo(r.getCell(49).getStringCellValue()));
+                        memberDetail.setAsthma(yesOrNo(r.getCell(56).getStringCellValue()));
+                        memberDetail.setDiabetes(yesOrNo(r.getCell(104).getStringCellValue()));
+                        memberDetail.setHeartDiseases(yesOrNo(r.getCell(111).getStringCellValue()));
+                        memberDetail.setObesity(yesOrNo(r.getCell(75).getStringCellValue()));
+                        memberDetail.setBreastCancer(yesOrNo(r.getCell(107).getStringCellValue()));
+                        memberDetail.setUterusCancer(yesOrNo(r.getCell(108).getStringCellValue()));
+                        memberDetail.setPhysicallyChallenged(yesOrNo(r.getCell(98).getStringCellValue()));
+
+
                         memberDetail.setCommunity(communityDetailsMap.get(r.getCell(13).getStringCellValue().toLowerCase(Locale.ROOT)+r.getCell(14).getStringCellValue().toLowerCase(Locale.ROOT)));
                         memberDetail.setMemberName(r.getCell(17).getStringCellValue());
 
