@@ -61,6 +61,7 @@ public class MemberDetailAudit implements Serializable {
     private String breastCancer;
     private String uterusCancer;
     private Timestamp uterusCancerScan;
+    private Timestamp breastCancerScan;
     private String oralCancer;
     private String obesity;
     private String heartDiseases;
