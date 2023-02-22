@@ -51,28 +51,28 @@ public class FamilyDetails implements Serializable {
     private Integer deletedBy;
     private String isDeleted;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "statusOfHouse", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     StatusOfHouse statusOfHouseDetails;
 
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "typeOfHouse", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     TypeOfHouse typeOfHouseDetails;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "createdBy", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     User userDetails;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "areaDetails", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     DemographicDetail demographicDetail;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "familyIdRef", referencedColumnName="familyId", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     List<MemberDetail> memberDetail;

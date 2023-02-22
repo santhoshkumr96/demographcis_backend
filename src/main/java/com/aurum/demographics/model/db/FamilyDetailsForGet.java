@@ -29,7 +29,7 @@ public class FamilyDetailsForGet implements Serializable {
     private int memberCount;
 
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "areaDetails", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     DemographicDetail demographicDetail;

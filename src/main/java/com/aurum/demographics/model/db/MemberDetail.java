@@ -88,47 +88,47 @@ public class MemberDetail implements Serializable {
     private String patient_id;
 
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gender", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     Gender genderDetails;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "relationship", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     RelationShip relationshipDetails;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maritalStatus", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     MaritalStatus maritalStatusDetails;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bloodGroup", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     BloodGroup bloodGroupDetails;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "educationQualification", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     Education educationQualificationDetails;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "annualIncome", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     AnnuaIncome annualIncomeDetails;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     CommunityDetail communityDetail;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "occupation", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     Occupation occupationDetail;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "handicapType", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
     HandicapType handicapTypeDetail;
