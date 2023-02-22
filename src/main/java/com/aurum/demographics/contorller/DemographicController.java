@@ -6,35 +6,28 @@ import com.aurum.demographics.model.db.*;
 import com.aurum.demographics.repo.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.org.apache.xml.internal.utils.StylesheetPIHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFRelation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import sun.misc.IOUtils;
-import sun.nio.ch.IOUtil;
 import com.monitorjbl.xlsx.StreamingReader;
 
 
 import java.io.*;
-import java.lang.reflect.AnnotatedArrayType;
-import java.lang.reflect.Member;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Slf4j
@@ -83,6 +76,12 @@ public class DemographicController {
 
     @Autowired
     DemograhicDetailAuditRepository demograhicDetailAuditRepository;
+
+    @Autowired
+    FamilyDetailRepositoryForGet familyDetailRepositoryForGet;
+
+    @Autowired
+    MemberDetailForFamIdUpdateRepo memberDetailForFamIdUpdateRepo;
 
     public static String UPLOAD_DIRECTORY = "/Users/santhoshkumar/Desktop/testdemoimages";
 
@@ -182,7 +181,7 @@ public class DemographicController {
     public Object getFamilyDetails(@RequestBody PaginationRequest pagination){
         Pageable page =
                 PageRequest.of(pagination.getPageNumber(), pagination.getNumberOfRows(), Sort.by("id"));
-        return familyDetailRepository.findByFamilyIdContainingAndRespondentNameContainingAndMobileNumberContainingAndDemographicDetailVillageNameContainingAndIsDeleted(
+        return familyDetailRepositoryForGet.findByFamilyIdContainingAndRespondentNameContainingAndMobileNumberContainingAndDemographicDetailVillageNameContainingAndIsDeleted(
                 pagination.getFamilyId(),
                 pagination.getRespondentName(),
                 pagination.getMobileNumber(),
@@ -229,10 +228,47 @@ public class DemographicController {
                DemographicDetailAudit demographicDetailAudit = new DemographicDetailAudit();
                demographicDetailAudit.setCreated_by(familyDetails.getUpdatedBy());
                demographicDetailAudit.setAreaPreviousId(oldDetails.getAreaDetails());
-               demographicDetailAudit.setFamilyId(familyDetails.getFamilyId());
+               demographicDetailAudit.setFamilyId(familyDetails.getId().toString());
                demograhicDetailAuditRepository.save(demographicDetailAudit);
-               log.info("area is changed");
+
+               DemographicDetail demographicDetail = demograhicDetailRepository.findById((long)familyDetails.getAreaDetails()).get();
+               List<FamilyDetailsForGet> familyDetailsForGets =  familyDetailRepositoryForGet.findByFamilyIdContainingOrderByFamilyIdDesc(demographicDetail.getAreaCode()+demographicDetail.getVillageCode());
+               log.info("area is changed"+familyDetailsForGets.size());
+               if(familyDetailsForGets.size() > 0){
+                   log.info(new ObjectMapper().writeValueAsString(familyDetailsForGets.get(0)));
+                   String familyId = familyDetailsForGets.get(0).getFamilyId();
+                   String numberOFfamilyInArea = familyId.substring(familyId.length() - 4);
+                   String famNum = String.format("%04d",Integer.parseInt(numberOFfamilyInArea)+1);
+                   List<MemberDetailForFamIdUpdate> memberDetailForFamIdUpdates =  memberDetailForFamIdUpdateRepo.findByFamilyIdRef(familyDetails.getFamilyId());
+                   for(MemberDetailForFamIdUpdate mem : memberDetailForFamIdUpdates){
+                       mem.setFamilyIdRef(demographicDetail.getAreaCode()+demographicDetail.getVillageCode()+famNum);
+                   }
+                   memberDetailForFamIdUpdateRepo.saveAll(memberDetailForFamIdUpdates);
+                   familyDetails.setFamilyId(demographicDetail.getAreaCode()+demographicDetail.getVillageCode()+famNum);
+               } else {
+                   String famNum = String.format("%04d",1);
+                   List<MemberDetailForFamIdUpdate> memberDetailForFamIdUpdates =  memberDetailForFamIdUpdateRepo.findByFamilyIdRef(familyDetails.getFamilyId());
+                   for(MemberDetailForFamIdUpdate mem : memberDetailForFamIdUpdates){
+                       mem.setFamilyIdRef(demographicDetail.getAreaCode()+demographicDetail.getVillageCode()+famNum);
+                   }
+                   memberDetailForFamIdUpdateRepo.saveAll(memberDetailForFamIdUpdates);
+                   familyDetails.setFamilyId(demographicDetail.getAreaCode()+demographicDetail.getVillageCode()+famNum);
+               }
            }
+        }
+        if(Objects.isNull(familyDetails.getFamilyId()) || familyDetails.getFamilyId().isEmpty()){
+            DemographicDetail demographicDetail = demograhicDetailRepository.findById((long)familyDetails.getAreaDetails()).get();
+            List<FamilyDetailsForGet> familyDetailsForGets =  familyDetailRepositoryForGet.findByFamilyIdContainingOrderByFamilyIdDesc(demographicDetail.getAreaCode()+demographicDetail.getVillageCode());
+            String famNum = "";
+            if(familyDetailsForGets.size() > 0){
+                String familyId = familyDetailsForGets.get(0).getFamilyId();
+                String numberOFfamilyInArea = familyId.substring(familyId.length() - 4);
+                 famNum = String.format("%04d",Integer.parseInt(numberOFfamilyInArea)+1);
+            }else{
+                 famNum = String.format("%04d",1);
+            }
+            familyDetails.setFamilyId(demographicDetail.getAreaCode()+demographicDetail.getVillageCode()+famNum);
+            log.info("it is a new enty");
         }
         Long generatedId = familyDetailRepository.save(familyDetails).getId();
         return generatedId;
@@ -317,7 +353,7 @@ public class DemographicController {
 
     }
 
-    @GetMapping("/excel")
+    @GetMapping("/excelDropdowns")
     public void downloadExcel() throws FileNotFoundException, JsonProcessingException {
         InputStream is = new FileInputStream(new File("/Users/santhoshkumar/Downloads/Feb03022023.xlsx"));
 
@@ -526,14 +562,14 @@ public class DemographicController {
             if(!g.toLowerCase(Locale.ROOT).isEmpty()){
                 DemographicDetail gen = new DemographicDetail();
                 String[] arrOfStr = g.split("\\|");
-                gen.setDistrict(arrOfStr[0]);
-                gen.setTaluk(arrOfStr[1]);
-                gen.setBlockName(arrOfStr[2]);
-                gen.setPanchayat(arrOfStr[3]);
+                gen.setDistrict(arrOfStr[0].toLowerCase(Locale.ROOT));
+                gen.setTaluk(arrOfStr[1].toLowerCase(Locale.ROOT));
+                gen.setBlockName(arrOfStr[2].toLowerCase(Locale.ROOT));
+                gen.setPanchayat(arrOfStr[3].toLowerCase(Locale.ROOT));
                 gen.setAreaCode(Integer.parseInt(arrOfStr[4]));
-                gen.setVillageCode(arrOfStr[5]);
-                gen.setVillageName(arrOfStr[6]);
-                gen.setStreetName(arrOfStr[7]);
+                gen.setVillageCode(arrOfStr[5].toLowerCase(Locale.ROOT));
+                gen.setVillageName(arrOfStr[6].toLowerCase(Locale.ROOT));
+                gen.setStreetName(arrOfStr[7].toLowerCase(Locale.ROOT));
                 if(gen.getVillageName().isEmpty() || Objects.isNull(gen.getVillageName())){
                     System.out.println(new ObjectMapper().writeValueAsString(arrOfStr));
                 }
@@ -565,6 +601,269 @@ public class DemographicController {
         memberDetailsRepo.deleteAll();
         familyDetailRepository.deleteAll();
 //        memberDetailsRepo.saveAll(memberDetails);
+    }
+
+
+    @GetMapping("/excelDataFamily")
+    public void downloadExcelData() throws FileNotFoundException, JsonProcessingException {
+        InputStream is = new FileInputStream(new File("/Users/santhoshkumar/Downloads/Feb03022023.xlsx"));
+
+        Workbook workbook = StreamingReader.builder()
+                .rowCacheSize(100)    // number of rows to keep in memory (defaults to 10)
+                .bufferSize(4096)// buffer size to use when reading InputStream to file (defaults to 1024)
+                .open(is);
+
+        List<MemberDetail> memberDetails = new ArrayList<>();
+
+        List<Gender> genders = new ArrayList<>();
+        List<RelationShip> relationShips = new ArrayList<>();
+        List<MaritalStatus> maritalStatuses = new ArrayList<>();
+        List<BloodGroup> bloodGroups = new ArrayList<>();
+        List<Education> educations = new ArrayList<>();
+        List<CommunityDetail> communityDetails = new ArrayList<>();
+        List<Occupation> occupations = new ArrayList<>();
+        List<StatusOfHouse> statusOfHouses = (List<StatusOfHouse>) statusOfHouseRepo.findAll();
+        List<TypeOfHouse> typeOfHouses = (List<TypeOfHouse>) typeOfHouseRepo.findAll();
+        List<DemographicDetail> demographicDetails = (List<DemographicDetail>) demograhicDetailRepository.findAll();
+
+        List<FamilyDetails> familyDetails = new ArrayList<>();
+        Map<String, String> famIdMap = new HashMap<>();
+
+        Map<String, Integer> stringStatusOfHouseMap = new HashMap<>();
+        for(StatusOfHouse statusOfHouse: statusOfHouses){
+            stringStatusOfHouseMap.put(statusOfHouse.getType(),((int)(long) statusOfHouse.getId()));
+        }
+
+        Map<String, Integer> stringTypeOfHouseHashMap = new HashMap<>();
+        for(TypeOfHouse typeOfHouse: typeOfHouses){
+            stringTypeOfHouseHashMap.put(typeOfHouse.getType(), ((int)(long) typeOfHouse.getId()));
+        }
+
+        Map<String, Integer> stringDemographicDetailMap = new HashMap<>();
+        for(DemographicDetail demographicDetail: demographicDetails){
+            stringDemographicDetailMap.put(
+                    demographicDetail.getDistrict()+""+
+                            demographicDetail.getTaluk()+""+
+                            demographicDetail.getBlockName()+""+
+                            demographicDetail.getPanchayat()+""+
+                            demographicDetail.getAreaCode()+""+
+                            demographicDetail.getVillageCode()+""+
+                            demographicDetail.getVillageName()+""+
+                            demographicDetail.getStreetName()
+                    ,
+                    ((int)(long) demographicDetail.getId()));
+        }
+        int i = 0 ;
+        try{
+            for (Sheet sheet : workbook){
+                for (Row r : sheet) {
+                    i++;
+                    if(i>2){
+
+                        if(!famIdMap.containsKey(r.getCell(15).getStringCellValue())){
+                            FamilyDetails familyDetail = new FamilyDetails();
+                            familyDetail.setFamilyId(r.getCell(15).getStringCellValue());
+                            familyDetail.setRespondentName(r.getCell(10).getStringCellValue());
+                            familyDetail.setMobileNumber(r.getCell(11).getStringCellValue());
+                            familyDetail.setDoorNo(r.getCell(9).getStringCellValue());
+                            familyDetail.setIsDeleted("N");
+
+                            if(Objects.isNull(r.getCell(33)) || Objects.isNull(r.getCell(33).getStringCellValue())  || r.getCell(33).getStringCellValue().isEmpty()){
+                                familyDetail.setStatusOfHouse(stringStatusOfHouseMap.get("n/a"));
+                            }else{
+                                familyDetail.setStatusOfHouse(stringStatusOfHouseMap.get(r.getCell(33).getStringCellValue().toLowerCase(Locale.ROOT)));
+                            }
+
+                            if(Objects.isNull(r.getCell(34)) || Objects.isNull(r.getCell(34).getStringCellValue())  || r.getCell(34).getStringCellValue().isEmpty()){
+                                familyDetail.setTypeOfHouse(stringTypeOfHouseHashMap.get("n/a"));
+                            }else{
+                                familyDetail.setTypeOfHouse(stringTypeOfHouseHashMap.get(r.getCell(34).getStringCellValue().toLowerCase(Locale.ROOT)));
+
+                            }
+
+                            familyDetail.setCreatedBy(1);
+                            familyDetail.setAreaDetails(
+                                    stringDemographicDetailMap.get(
+                                            r.getCell(1).getStringCellValue()+
+                                                    r.getCell(2).getStringCellValue()+
+                                                    r.getCell(3).getStringCellValue()+
+                                                    r.getCell(4).getStringCellValue()+
+                                                    r.getCell(5).getStringCellValue()+
+                                                    r.getCell(6).getStringCellValue()+
+                                                    r.getCell(7).getStringCellValue()+
+                                                    r.getCell(8).getStringCellValue()
+
+                                    )
+                            );
+                            if(r.getCell(39).getStringCellValue().toLowerCase(Locale.ROOT).equals("yes")){
+                                familyDetail.setToiletFacilityAtHome("Y");
+                            } else if (r.getCell(39).getStringCellValue().toLowerCase(Locale.ROOT).equals("no")){
+                                familyDetail.setToiletFacilityAtHome("N");
+                            } else {
+                                familyDetail.setToiletFacilityAtHome("");
+                            }
+
+                            familyDetail.setWetLandInAcres(r.getCell(35).getStringCellValue());
+                            familyDetail.setDryLandInAcres(r.getCell(36).getStringCellValue());
+
+
+
+                            famIdMap.put(r.getCell(15).getStringCellValue(),"");
+                            familyDetails.add(familyDetail);
+                        }
+                    }
+                    if(i%1000 == 0){
+                        familyDetailRepository.saveAll(familyDetails);
+                        familyDetails.clear();
+                        System.out.println("uploaded number of data==>"+ i);
+                    }
+                }
+            }
+        } catch (Exception e){
+            System.out.println("error"+e.getMessage());
+            e.printStackTrace();
+        }
+        System.out.println("last data read==>"+ i);
+        familyDetailRepository.saveAll(familyDetails);
+    }
+
+    @GetMapping("/excelDataMem")
+    public void downloadExcelDataMem() throws FileNotFoundException, JsonProcessingException {
+        InputStream is = new FileInputStream(new File("/Users/santhoshkumar/Downloads/Feb03022023.xlsx"));
+
+        Workbook workbook = StreamingReader.builder()
+                .rowCacheSize(100)    // number of rows to keep in memory (defaults to 10)
+                .bufferSize(4096)// buffer size to use when reading InputStream to file (defaults to 1024)
+                .open(is);
+
+        List<MemberDetail> memberDetails = new ArrayList<>();
+
+        List<Gender> genders = (List<Gender>) genderRepo.findAll();
+        List<RelationShip> relationShips = (List<RelationShip>) relationShipRepo.findAll();
+        List<MaritalStatus> maritalStatuses = (List<MaritalStatus>) maritalStatusRepo.findAll();
+        List<BloodGroup> bloodGroups = (List<BloodGroup>) bloodGroupRepo.findAll();
+        List<Education> educations = (List<Education>) educationQualificationRepo.findAll();
+        List<CommunityDetail> communityDetails = (List<CommunityDetail>) communityDetailRepository.findAll();
+        List<Occupation> occupations = (List<Occupation>) occupationRepo.findAll();
+
+        Map<String, Integer> genMap = new HashMap<>();
+        for(Gender data: genders){
+            genMap.put(data.getType(),((int)(long) data.getId()));
+        }
+
+        Map<String, Integer> relMap = new HashMap<>();
+        for(RelationShip data: relationShips){
+            relMap.put(data.getType(),((int)(long) data.getId()));
+        }
+
+        Map<String, Integer> msMap = new HashMap<>();
+        for(MaritalStatus data: maritalStatuses){
+            msMap.put(data.getType(),((int)(long) data.getId()));
+        }
+
+        Map<String, Integer> bloodGroupsMap = new HashMap<>();
+        for(BloodGroup data: bloodGroups){
+            bloodGroupsMap.put(data.getType(),((int)(long) data.getId()));
+        }
+
+        Map<String, Integer> educationsMap = new HashMap<>();
+        for(Education data: educations){
+            educationsMap.put(data.getType(),((int)(long) data.getId()));
+        }
+
+        Map<String, Integer> occupationsMap = new HashMap<>();
+        for(Occupation data: occupations){
+            occupationsMap.put(data.getType(),((int)(long) data.getId()));
+        }
+
+        Map<String, Integer> communityDetailsMap = new HashMap<>();
+        for(CommunityDetail data: communityDetails){
+            communityDetailsMap.put(data.getCommunity()+data.getCaste(),((int)(long) data.getId()));
+        }
+
+
+        int i = 0 ;
+        try{
+            for (Sheet sheet : workbook){
+                for (Row r : sheet) {
+                    i++;
+                    if(i>2){
+                        MemberDetail memberDetail = new MemberDetail();
+
+                        memberDetail.setFamilyIdRef(r.getCell(15).getStringCellValue());
+                        memberDetail.setMobileNumber(r.getCell(11).getStringCellValue());
+
+                        memberDetail.setSmartphone(yesOrNo(r.getCell(12).getStringCellValue()));
+                        memberDetail.setCommunity(communityDetailsMap.get(r.getCell(13).getStringCellValue().toLowerCase(Locale.ROOT)+r.getCell(14).getStringCellValue().toLowerCase(Locale.ROOT)));
+                        memberDetail.setMemberName(r.getCell(17).getStringCellValue());
+
+                        memberDetail.setGender(genMap.get(mapValueCheck(r.getCell(18).getStringCellValue())));
+                        memberDetail.setRelationship(relMap.get(mapValueCheck(r.getCell(19).getStringCellValue())));
+                        memberDetail.setEducationQualification(educationsMap.get(mapValueCheck(r.getCell(23).getStringCellValue())));
+                        memberDetail.setMaritalStatus(msMap.get(mapValueCheck(r.getCell(24).getStringCellValue())));
+                        memberDetail.setOccupation(occupationsMap.get(mapValueCheck(r.getCell(25).getStringCellValue())));
+                        memberDetail.setBloodGroup(bloodGroupsMap.get("n/a"));
+                        memberDetail.setAnnualIncome(1);
+
+                        memberDetail.setAnnualIncomeString(r.getCell(27).getStringCellValue());
+                        memberDetail.setRetiredPerson(yesOrNo(r.getCell(26).getStringCellValue()));
+                        memberDetail.setTmh_id(r.getCell(28).getStringCellValue());
+                        memberDetail.setPatient_id(r.getCell(29).getStringCellValue());
+                        memberDetail.setIsDeceased(yesOrNo(r.getCell(30).getStringCellValue()));
+
+                        memberDetail.setBirthDate(r.getCell(21).getStringCellValue().isEmpty()?null:dateGet(r.getCell(21).getStringCellValue()));
+                        memberDetail.setIsDeleted("N");
+                        memberDetail.setCreatedBy(1);
+                        memberDetails.add(memberDetail);
+                    }
+                    if(i%1000 == 0){
+                        memberDetailsRepo.saveAll(memberDetails);
+                        memberDetails.clear();
+                        System.out.println("uploaded number of data==>"+ i);
+//                        break;
+                    }
+                }
+            }
+        } catch (Exception e){
+            System.out.println("error"+e.getMessage());
+            e.printStackTrace();
+        }
+        memberDetailsRepo.saveAll(memberDetails);
+        System.out.println("last data read==>"+ i);
+    }
+
+    public String yesOrNo(String val){
+        if(val.toLowerCase(Locale.ROOT).equals("yes")){
+            return "Y";
+        } else if (val.toLowerCase(Locale.ROOT).equals("no")){
+            return "N";
+        } else {
+            return "";
+        }
+    }
+
+    public String mapValueCheck(String val){
+        if(Objects.isNull(val) || val.isEmpty()){
+            return "n/a";
+        }else{
+            return val.toLowerCase(Locale.ROOT);
+        }
+
+    }
+
+    public Date dateGet(String val) throws JsonProcessingException, ParseException {
+        String[] datestrings = val.split("-");
+        System.out.println(new ObjectMapper().writeValueAsString(datestrings));
+        Date date = new GregorianCalendar(
+                Integer.parseInt(datestrings[2]),  Integer.parseInt(datestrings[0]) - 1, Integer.parseInt(datestrings[1])).getTime();
+
+        java.sql.Timestamp sq = new java.sql.Timestamp(date.getTime());
+        String dateStr = new SimpleDateFormat("yyyy-MM-dd")
+                .format(date);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); // your template here
+        java.util.Date dateStrAct = formatter.parse(dateStr);
+        java.sql.Date dateDB = new java.sql.Date(dateStrAct.getTime());
+        return new Date(dateStrAct.getTime());
     }
 
 }
