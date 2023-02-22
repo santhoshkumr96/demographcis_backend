@@ -17,5 +17,14 @@
     <include file="/dblogs/changelog/changes/9-create-typeofhouse-table-changelog.sql"/>
     <include file="/dblogs/changelog/changes/10-create-statusofhouse-table-changelog.sql"/>
     <include file="/dblogs/changelog/changes/11-create-memberdetails-table-changelog.sql"/>
+    <include file="/dblogs/changelog/changes/12-create-useraudit-table-changelog.sql"/>
+    <include file="/dblogs/changelog/changes/13-create-relationship-table-changelog.sql"/>
+    <include file="/dblogs/changelog/changes/14-create-occupation-table-changelog.sql"/>
+    <include file="/dblogs/changelog/changes/15-create-maritalstatus-table-changelog.sql"/>
+    <include file="/dblogs/changelog/changes/16-create-educationqualification-table-changelog.sql"/>
+    <include file="/dblogs/changelog/changes/17-create-demographicsdetailsaudit-table-changelog.sql"/>
+    <include file="/dblogs/changelog/changes/18-create-community-table-changelog.sql"/>
+    <include file="/dblogs/changelog/changes/19-create-bloodgroup-table-changelog.sql"/>
+    <include file="/dblogs/changelog/changes/20-create-annualincome-table-changelog.sql"/>
 
 </databaseChangeLog>
