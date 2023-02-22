@@ -348,6 +348,11 @@ public class DemographicController {
             memberDetail.setEducationQualification((int)(long)educations.get(0).getId());
         }
 
+        if (memberDetail.getHandicapType() == 0 ){
+            List<HandicapType> educations = (List<HandicapType>) handiCapeTypeRepo.findAll();
+            memberDetail.setHandicapType((int)(long)educations.get(0).getId());
+        }
+
         if (memberDetail.getAnnualIncome() == 0 ){
             List<AnnuaIncome> annualIncomes = (List<AnnuaIncome>) annualIncomeRepo.findAll();
             memberDetail.setAnnualIncome((int)(long)annualIncomes.get(0).getId());
