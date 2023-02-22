@@ -25,5 +25,7 @@
     <include file="/dblogs/changelog/changes/18-create-community-table-changelog.sql"/>
     <include file="/dblogs/changelog/changes/19-create-bloodgroup-table-changelog.sql"/>
     <include file="/dblogs/changelog/changes/20-create-annualincome-table-changelog.sql"/>
-
+    <include file="/dblogs/changelog/changes/21-create-familyDetailsAudit-table-changelog.sql"/>
+    <include file="/dblogs/changelog/changes/22-create-memberDetailsAudit-table-changelog.sql"/>
+    
 </databaseChangeLog>
