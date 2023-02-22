@@ -850,6 +850,8 @@ public class DemographicController {
                         memberDetail.setFamilyIdRef(r.getCell(15).getStringCellValue());
                         memberDetail.setMobileNumber(r.getCell(11).getStringCellValue());
 
+                        memberDetail.setBp(yesOrNo(r.getCell(57).getStringCellValue()));
+                        memberDetail.setLungRelatedDiseases(yesOrNo(r.getCell(112).getStringCellValue()));
                         memberDetail.setSmartphone(yesOrNo(r.getCell(12).getStringCellValue()));
                         memberDetail.setGovtInsurance(yesOrNo(r.getCell(40).getStringCellValue()));
                         memberDetail.setPrivateInsurance(yesOrNo(r.getCell(41).getStringCellValue()));
