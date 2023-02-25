@@ -29,8 +29,6 @@ public class MemberDetail implements Serializable {
     private String isDeleted;
     private String aadharNumber;
     private String mobileNumber;
-    private String tmhId;
-    private String patientId;
 
     private String email;
     private String physicallyChallenged;
