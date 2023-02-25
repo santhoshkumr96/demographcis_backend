@@ -84,8 +84,8 @@ public class MemberDetail implements Serializable {
     private int handicapType;
 
     private String annualIncomeString;
-    private String tmh_id;
-    private String patient_id;
+    private String tmhId;
+    private String patientId;
 
 
     @OneToOne(fetch = FetchType.LAZY)

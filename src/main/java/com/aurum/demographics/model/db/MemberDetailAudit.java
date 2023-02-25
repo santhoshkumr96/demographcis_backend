@@ -83,7 +83,7 @@ public class MemberDetailAudit implements Serializable {
     private int annualIncome;
 
     private String annualIncomeString;
-    private String tmh_id;
-    private String patient_id;
+    private String tmhId;
+    private String patientId;
     private int handicapType;
 }
