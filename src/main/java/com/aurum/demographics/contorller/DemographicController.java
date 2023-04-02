@@ -94,7 +94,7 @@ public class DemographicController {
     @Autowired
     MemberDetailsAuditRepo memberDetailsAuditRepo;
 
-    public static String UPLOAD_DIRECTORY = "/Users/santhoshkumar/Desktop/testdemoimages";
+    public static String UPLOAD_DIRECTORY = "C:\\Users\\Administrator\\Documents\\tctPictures";
 
 
     @PostMapping("/upload") public void uploadImage(@RequestParam String memId,@RequestParam("image") MultipartFile file) throws IOException {
@@ -211,7 +211,12 @@ public class DemographicController {
     @PostMapping("/getFamilyDetail")
 //    @PreAuthorize("hasRole('USER')")
     public Object getFamilyDetail(@RequestParam String id) throws Exception {
-       Optional<FamilyDetails> familyDetails = familyDetailRepository.findById(Long.parseLong(id));
+        Optional<FamilyDetails> familyDetails = null;
+        try {
+             familyDetails = familyDetailRepository.findById(Long.parseLong(id));
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
        if(familyDetails.isPresent()){
            return familyDetails.get();
        }else {
@@ -394,7 +399,7 @@ public class DemographicController {
 
     @GetMapping("/excelDropdowns")
     public void downloadExcel() throws FileNotFoundException, JsonProcessingException {
-        InputStream is = new FileInputStream(new File("/Users/santhoshkumar/Downloads/Feb03022023.xlsx"));
+        InputStream is = new FileInputStream(new File("C:\\Users\\Administrator\\Documents\\Feb03022023.xlsx"));
 
         Workbook workbook = StreamingReader.builder()
                 .rowCacheSize(100)    // number of rows to keep in memory (defaults to 10)
@@ -663,7 +668,7 @@ public class DemographicController {
 
     @GetMapping("/excelDataFamily")
     public void downloadExcelData() throws FileNotFoundException, JsonProcessingException {
-        InputStream is = new FileInputStream(new File("/Users/santhoshkumar/Downloads/Feb03022023.xlsx"));
+        InputStream is = new FileInputStream(new File("C:\\Users\\Administrator\\Documents\\Feb03022023.xlsx"));
 
         Workbook workbook = StreamingReader.builder()
                 .rowCacheSize(100)    // number of rows to keep in memory (defaults to 10)
@@ -786,7 +791,7 @@ public class DemographicController {
 
     @GetMapping("/excelDataMem")
     public void downloadExcelDataMem() throws FileNotFoundException, JsonProcessingException {
-        InputStream is = new FileInputStream(new File("/Users/santhoshkumar/Downloads/Feb03022023.xlsx"));
+        InputStream is = new FileInputStream(new File("C:\\Users\\Administrator\\Documents\\Feb03022023.xlsx"));
 
         Workbook workbook = StreamingReader.builder()
                 .rowCacheSize(100)    // number of rows to keep in memory (defaults to 10)
@@ -889,8 +894,8 @@ public class DemographicController {
 
                         memberDetail.setAnnualIncomeString(r.getCell(27).getStringCellValue());
                         memberDetail.setRetiredPerson(yesOrNo(r.getCell(26).getStringCellValue()));
-                        memberDetail.setTmh_id(r.getCell(28).getStringCellValue());
-                        memberDetail.setPatient_id(r.getCell(29).getStringCellValue());
+                        memberDetail.setTmhId(r.getCell(28).getStringCellValue());
+                        memberDetail.setPatientId(r.getCell(29).getStringCellValue());
                         memberDetail.setIsDeceased(yesOrNo(r.getCell(30).getStringCellValue()));
 
                         memberDetail.setBirthDate(r.getCell(21).getStringCellValue().isEmpty()?null:dateGet(r.getCell(21).getStringCellValue()));
