@@ -91,4 +91,8 @@ public class MemberDetailAudit implements Serializable {
     private Date permanentSterlizationDate;
     private String tmpSterlization;
     private String tmpSterlizationType;
+
+    private Date diabeticEnrolmentDate;
+    private String  diabeticEnrollmentStatus ;
+    private Date  diabeticEnrollmentEndDate;
 }

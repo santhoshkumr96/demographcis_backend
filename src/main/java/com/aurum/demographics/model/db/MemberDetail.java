@@ -92,6 +92,10 @@ public class MemberDetail implements Serializable {
     private String tmpSterlization;
     private String tmpSterlizationType;
 
+    private Date diabeticEnrolmentDate;
+    private String  diabeticEnrollmentStatus ;
+    private Date  diabeticEnrollmentEndDate;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gender", insertable = false, updatable = false)
     @Fetch(FetchMode.JOIN)
