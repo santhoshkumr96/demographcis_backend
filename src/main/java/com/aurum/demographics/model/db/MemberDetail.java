@@ -87,6 +87,10 @@ public class MemberDetail implements Serializable {
     private String tmhId;
     private String patientId;
 
+    private String permanentSterlization;
+    private Date permanentSterlizationDate;
+    private String tmpSterlization;
+    private String tmpSterlizationType;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gender", insertable = false, updatable = false)

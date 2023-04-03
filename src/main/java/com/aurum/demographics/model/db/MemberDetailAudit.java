@@ -86,4 +86,9 @@ public class MemberDetailAudit implements Serializable {
     private String tmhId;
     private String patientId;
     private int handicapType;
+
+    private String permanentSterlization;
+    private Date permanentSterlizationDate;
+    private String tmpSterlization;
+    private String tmpSterlizationType;
 }

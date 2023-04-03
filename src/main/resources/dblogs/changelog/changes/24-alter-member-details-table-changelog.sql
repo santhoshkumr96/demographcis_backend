@@ -4,7 +4,7 @@
 alter table member_details
 ADD permanent_sterlization varchar(100);
 alter table member_details
-ADD permanent_sterlization_date timestamp(100);
+ADD permanent_sterlization_date timestamp;
 alter table member_details
 ADD tmp_sterlization varchar(100);
 alter table member_details
@@ -19,7 +19,7 @@ ADD diabetic_enrollment_end_date timestamp;
 alter table member_details_audit
 ADD permanent_sterlization varchar(100);
 alter table member_details_audit
-ADD permanent_sterlization_date timestamp(100);
+ADD permanent_sterlization_date timestamp;
 alter table member_details_audit
 ADD tmp_sterlization varchar(100);
 alter table member_details_audit
