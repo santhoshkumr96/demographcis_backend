@@ -34,4 +34,9 @@ public class FamilyDetailsForGet implements Serializable {
     @Fetch(FetchMode.JOIN)
     DemographicDetail demographicDetail;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "familyIdRef", referencedColumnName="familyId", insertable = false, updatable = false)
+    @Fetch(FetchMode.JOIN)
+    List<MemberDetailWithNameAndId> memberDetail;
+
 }

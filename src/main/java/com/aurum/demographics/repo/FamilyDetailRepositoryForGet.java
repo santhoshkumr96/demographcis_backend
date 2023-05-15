@@ -15,5 +15,8 @@ import java.util.Optional;
 public interface FamilyDetailRepositoryForGet extends PagingAndSortingRepository<FamilyDetailsForGet, Long> {
 
     Page<FamilyDetailsForGet> findByFamilyIdContainingAndRespondentNameContainingAndMobileNumberContainingAndDemographicDetailVillageNameContainingAndIsDeleted(String familyId, String RespondentName,String MobileNumber, String villageName,String isDeleted, Pageable pageable);
+
+    Page<FamilyDetailsForGet> findByFamilyIdContainingAndRespondentNameContainingAndMobileNumberContainingAndMemberDetailMemberNameContainingAndDemographicDetailVillageNameContainingAndIsDeleted(String familyId, String RespondentName,String MobileNumber,String memberName, String villageName,String isDeleted, Pageable pageable);
+
     List<FamilyDetailsForGet> findByFamilyIdContainingOrderByFamilyIdDesc(String areaCode);
 }

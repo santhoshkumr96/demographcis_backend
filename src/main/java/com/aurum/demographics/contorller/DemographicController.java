@@ -2,6 +2,7 @@ package com.aurum.demographics.contorller;
 
 import com.aurum.demographics.model.api.DeleteRequest;
 import com.aurum.demographics.model.api.PaginationRequest;
+import com.aurum.demographics.model.api.PaginationRequestNew;
 import com.aurum.demographics.model.db.*;
 import com.aurum.demographics.repo.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -202,6 +203,23 @@ public class DemographicController {
                 pagination.getFamilyId(),
                 pagination.getRespondentName(),
                 pagination.getMobileNumber(),
+                pagination.getVillageName(),
+                "N",
+                page
+        );
+    }
+
+    @PostMapping("/getFamilyDetailsNew")
+//    @PreAuthorize("hasRole('USER')")
+    public Object getFamilyDetailsNew(@RequestBody PaginationRequestNew pagination){
+        Pageable page =
+                PageRequest.of(pagination.getPageNumber(), pagination.getNumberOfRows(), Sort.by("id"));
+        log.info("getting family details new");
+        return familyDetailRepositoryForGet.findByFamilyIdContainingAndRespondentNameContainingAndMobileNumberContainingAndMemberDetailMemberNameContainingAndDemographicDetailVillageNameContainingAndIsDeleted(
+                pagination.getFamilyId(),
+                pagination.getRespondentName(),
+                pagination.getMobileNumber(),
+                pagination.getMemberName(),
                 pagination.getVillageName(),
                 "N",
                 page
