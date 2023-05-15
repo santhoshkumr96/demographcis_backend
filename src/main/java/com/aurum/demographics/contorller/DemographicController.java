@@ -125,7 +125,7 @@ public class DemographicController {
     @GetMapping("/getAreaDetails")
 //    @PreAuthorize("hasRole('USER')")
     public Object getAreaDetails(){
-        return demograhicDetailRepository.findAll();
+        return demograhicDetailRepository.findByIsDeleted("N");
     }
 
     @GetMapping("/getHandiCapDetails")

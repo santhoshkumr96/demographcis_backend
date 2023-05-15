@@ -22,4 +22,5 @@ public class DemographicDetail {
     private String villageCode;
     private String villageName;
     private String streetName;
+    private String isDeleted;
 }
