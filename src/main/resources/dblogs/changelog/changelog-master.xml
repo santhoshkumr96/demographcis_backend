@@ -30,4 +30,5 @@
     <include file="/dblogs/changelog/changes/23-create-handicapetype-table-changelog.sql"/>
     <include file="/dblogs/changelog/changes/24-alter-member-details-table-changelog.sql"/>
     <include file="/dblogs/changelog/changes/25-alter-member-details-dibaetic-table-changelog.sql"/>
+    <include file="/dblogs/changelog/changes/26-alter-member-details-height-weight-table-changelog.sql"/>
 </databaseChangeLog>
