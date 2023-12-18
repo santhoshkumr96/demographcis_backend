@@ -83,6 +83,10 @@ public class MemberDetail implements Serializable {
     private int annualIncome;
     private int handicapType;
 
+    private int height;
+
+    private int weight;
+
     private String annualIncomeString;
     private String tmhId;
     private String patientId;
